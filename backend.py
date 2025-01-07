@@ -78,7 +78,7 @@ class GameLibrary:
 
         #TODO: Impement this method.
         # It should take a game object and save it as a row to a csv
-        # the path of the csv is found in self.csv_path
+        # the path of the csv is found in self.csv_path.
 
         #TODO: Add a try except block to handle the case where the file does not exist
 

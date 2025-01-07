@@ -194,7 +194,7 @@ class GoodGamesApp:
         ).grid(row=2, column=0, columnspan=2, pady=10)
 
     def setup_game_overview(self, parent):
-        """Setup the game overview panel"""
+        """Setup the game overview panel."""
         overview_frame = ttk.LabelFrame(parent, text="Game Overview", padding="10")
         overview_frame.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         parent.grid_rowconfigure(0, weight=1)
