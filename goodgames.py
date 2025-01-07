@@ -23,6 +23,7 @@ class GoodGamesApp:
         # Setup individual tabs
         self.setup_add_game_tab()
         self.setup_library_tab()
+        self.setup_statistics_tab()
 
         # Bind tab change event
         self.notebook.bind("<<NotebookTabChanged>>", lambda e: self.refresh_library())
@@ -40,10 +41,12 @@ class GoodGamesApp:
         # Create frames for each tab
         self.add_game_frame = ttk.Frame(self.notebook)
         self.library_frame = ttk.Frame(self.notebook)
+        self.statistics_frame = ttk.Frame(self.notebook)
 
         # Add frames to notebook
         self.notebook.add(self.add_game_frame, text="Add New Game")
         self.notebook.add(self.library_frame, text="Game Library")
+        self.notebook.add(self.statistics_frame, text="Game Statistics")
 
     def setup_add_game_tab(self):
         """Setup the Add Game tab interface"""
@@ -103,6 +106,14 @@ class GoodGamesApp:
         self.setup_game_overview(right_frame)
 
         self.refresh_library()
+
+
+
+
+    def setup_statistics_tab(self):
+        pass
+
+
 
     def setup_library_filter(self, parent):
         """Setup the status filter in the library tab"""
@@ -354,6 +365,9 @@ class GoodGamesApp:
         review_text = game.get('review', 'No review yet')
         self.overview_review.insert("1.0", review_text)
         self.overview_review.configure(state='disabled')
+
+
+
 
 if __name__ == "__main__":
     root = tk.Tk()

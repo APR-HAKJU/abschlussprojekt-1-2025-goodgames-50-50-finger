@@ -1,7 +1,7 @@
 # backend.py
 
 from datetime import datetime
-
+import csv
 
 class Game:
     """Represents a single game in the collection"""
@@ -50,13 +50,38 @@ class GameLibrary:
         self.next_id = 1
         self.csv_path = "./games.csv"
 
-    def save_to_csv(self,game):
+    def save_to_csv(self, game):
+        """Speichert ein Spielobjekt als Zeile in der CSV-Datei"""
+        try:
+            # Überprüfen, ob die CSV-Datei bereits existiert
+            file_exists = False
+            try:
+                with open(self.csv_path, mode='r', newline='', encoding='utf-8') as file:
+                    file_exists = True
+            except FileNotFoundError:
+                pass
+
+            # Spiel in die CSV-Datei schreiben
+            with open(self.csv_path, mode='a', newline='', encoding='utf-8') as file:
+                writer = csv.DictWriter(file, fieldnames=game.to_dict().keys())
+
+                # Kopfzeile nur schreiben, wenn die Datei neu erstellt wird
+                if not file_exists:
+                    writer.writeheader()
+
+                # Spiel als Zeile hinzufügen
+                writer.writerow(game.to_dict())
+            print(f"Spiel '{game.title}' erfolgreich gespeichert.")
+        except Exception as e:
+            print(f"Fehler beim Speichern des Spiels: {e}")
+
+
         #TODO: Impement this method.
         # It should take a game object and save it as a row to a csv
         # the path of the csv is found in self.csv_path
 
         #TODO: Add a try except block to handle the case where the file does not exist
-        pass
+
 
     def load_from_csv(self):
         # TODO Implement this method.
