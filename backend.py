@@ -82,22 +82,78 @@ class GameLibrary:
 
         #TODO: Add a try except block to handle the case where the file does not exist
 
-
     def load_from_csv(self):
+        """Lädt alle Spiele aus der CSV-Datei und fügt sie zu self.games hinzu"""
+        try:
+            with open(self.csv_path, mode='r', newline='', encoding='utf-8') as file:
+                reader = csv.DictReader(file)
+
+                # Alle Spiele aus der Datei laden und in self.games einfügen
+                self.games = [
+                    Game(
+                        id=int(row['id']),
+                        title=row['title'],
+                        platform=row['platform'],
+                        status=row['status'],
+                        # Zusätzliche Felder wie rating und review einfügen
+                    )
+                    for row in reader
+                ]
+                print(f"{len(self.games)} Spiele erfolgreich aus der CSV-Datei geladen.")
+        except FileNotFoundError:
+            print(f"Die Datei {self.csv_path} wurde nicht gefunden. Es wurden keine Spiele geladen.")
+        except Exception as e:
+            print(f"Fehler beim Laden der Spiele: {e}")
+
         # TODO Implement this method.
         # It should load all objects from a csv file and return put the games into self.games
         # the path of the csv is found in self.csv_path
 
         # TODO: Add a try except block to handle the case where the file does not exist
-        pass
 
-    def update_game_in_csv(self,game):
+        def update_game_in_csv(self, game):
+            """Aktualisiert eine vorhandene Zeile in der CSV-Datei basierend auf der Spiel-ID"""
+            try:
+                updated = False
+                temp_file_path = self.csv_path + ".tmp"
+
+                with open(self.csv_path, mode='r', newline='', encoding='utf-8') as file:
+                    reader = csv.DictReader(file)
+                    fieldnames = reader.fieldnames
+
+                    with open(temp_file_path, mode='w', newline='', encoding='utf-8') as temp_file:
+                        writer = csv.DictWriter(temp_file, fieldnames=fieldnames)
+                        writer.writeheader()
+
+                        for row in reader:
+                            # Prüfen, ob die aktuelle Zeile aktualisiert werden muss
+                            if int(row['id']) == game.id:
+                                writer.writerow(game.to_dict())
+                                updated = True
+                            else:
+                                writer.writerow(row)
+
+                # Originaldatei durch die temporäre Datei ersetzen
+                if updated:
+                    import os
+                    os.replace(temp_file_path, self.csv_path)
+                    print(f"Spiel mit ID {game.id} erfolgreich aktualisiert.")
+                else:
+                    # Temporäre Datei entfernen, wenn kein Update durchgeführt wurde
+                    import os
+                    os.remove(temp_file_path)
+                    print(f"Spiel mit ID {game.id} wurde nicht in der CSV-Datei gefunden.")
+            except FileNotFoundError:
+                print(f"Die Datei {self.csv_path} wurde nicht gefunden. Es konnte kein Spiel aktualisiert werden.")
+            except Exception as e:
+                print(f"Fehler beim Aktualisieren des Spiels: {e}")
+
+
         # TODO Implement this method.
         # It should take a game object and update the corresponding row in the csv
         # the path of the csv is found in self.csv_path
 
         # TODO: Add a try except block to handle the case where the file does not exist
-        pass
 
     def add_game(self, title, platform, status="Want to Play"):
         """Add a new game to the library"""
